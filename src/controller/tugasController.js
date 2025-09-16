@@ -16,14 +16,14 @@ export const getTugasByGuru = async (req, res) => {
         .json({ message: "User belum login atau token tidak valid" });
     }
 
-    const kelasId = req.user?.guruProfile?.Kelas?.id;
+    // const kelasId = req.user?.guruProfile?.Kelas?.id;
 
-    if (!kelasId) {
-      return res.status(404).json({
-        statusCode: 404,
-        message: "Guru belum dikaitkan dengan kelas manapun",
-      });
-    }
+    // if (!kelasId) {
+    //   return res.status(404).json({
+    //     statusCode: 404,
+    //     message: "Guru belum dikaitkan dengan kelas manapun",
+    //   });
+    // }
 
     const guruId = req.user.guruProfile.id;
 
@@ -38,6 +38,12 @@ export const getTugasByGuru = async (req, res) => {
         guru: {
           select: {
             name: true,
+          },
+        },
+        kelas: {
+          select: {
+            name: true,
+            id: true,
           },
         },
       },
@@ -88,10 +94,10 @@ export const getTugasByKelasMurid = async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    
+
     res.status(500).json({
       error: "Gagal mengambil tugas untuk kelas ini",
-      message :`err : ${err}`
+      message: `err : ${err}`,
     });
   }
 };

@@ -1,0 +1,115 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+
+  role           Role
+  muridProfile   MuridProfile? @relation(fields: [muridProfileId], references: [id])
+  muridProfileId Int?          @unique
+
+  guruProfile   GuruProfile? @relation(fields: [guruProfileId], references: [id])
+  guruProfileId Int?         @unique
+}
+
+model MuridProfile {
+  id         Int         @id @default(autoincrement())
+  nis        Int         @unique
+  name       String
+  noMurid    String?     @unique
+  kelas      Kelas?      @relation(fields: [kelasId], references: [id])
+  kelasId    Int?
+  rfid       Rfid?
+  User       User?
+  waliMurids WaliMurid[]
+}
+
+model WaliMurid {
+  id            Int          @id @default(autoincrement())
+  nameWaliMurid String
+  noWaliMurid   String
+  murid         MuridProfile @relation(fields: [muridId], references: [id])
+  muridId       Int
+}
+
+model GuruProfile {
+  id          Int           @id @default(autoincrement())
+  nik         Int           @unique
+  name        String
+  noGuru      String        @unique
+  rfid        Rfid?
+  User        User?
+  Kelas       Kelas?
+  JadwalTugas JadwalTugas[]
+}
+
+model Kelas {
+  id           Int            @id @default(autoincrement())
+  name         String         @unique
+  waliKelas    GuruProfile?   @relation(fields: [waliKelasId], references: [id])
+  waliKelasId  Int?           @unique
+  muridProfile MuridProfile[]
+  JadwalTugas  JadwalTugas[]
+}
+
+model Absensi {
+  id         Int        @id @default(autoincrement())
+  rfid       Rfid       @relation(fields: [rfidNumb], references: [rfidNumb])
+  rfidNumb   String
+  keterangan Keterangan
+  tanggal    DateTime?
+  jamHadir   DateTime?
+  jamPulang  DateTime?
+  catatan    String?
+
+  @@unique([rfidNumb, tanggal])
+}
+
+model JadwalTugas {
+  id          Int         @id @default(autoincrement())
+  title       String
+  start       DateTime
+  end         DateTime?
+  description String
+  guru        GuruProfile @relation(fields: [guruId], references: [id])
+  guruId      Int
+  kelas       Kelas       @relation(fields: [kelasId], references: [id])
+  kelasId     Int
+  createdAt   DateTime    @default(now())
+
+  @@unique([guruId, start, kelasId, title])
+}
+
+model Rfid {
+  id       Int    @id @default(autoincrement())
+  rfidNumb String @unique
+
+  muridProfileId Int?          @unique
+  muridProfile   MuridProfile? @relation(fields: [muridProfileId], references: [id])
+
+  guruProfileId Int?         @unique
+  guruProfile   GuruProfile? @relation(fields: [guruProfileId], references: [id])
+  absensi       Absensi[]
+}
+
+enum Role {
+  MURID
+  GURU
+  ADMIN
+}
+
+enum Keterangan {
+  HADIR
+  ALFA
+  SAKIT
+  IZIN
+}

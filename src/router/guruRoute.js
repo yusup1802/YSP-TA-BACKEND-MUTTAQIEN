@@ -8,7 +8,7 @@ import { tambahJadwalSchema , inputKeteranganKehadiranSchema} from "#validation/
 
 
 const router = Router();
-router.get("/guru/:id",authenticateAccessToken,
+router.get("/guru",authenticateAccessToken,
   checkRole(["GURU"]),
   profileGuru
 );

@@ -178,34 +178,30 @@ export const tambahJadwal = async (req, res) => {
 
 export const profileGuru = async (req, res) => {
   try {
-    const { id } = req.params;
-
-    if (req.user.id !== parseInt(id)) {
-      return res.status(403).json({ message: "Akses ditolak" });
-    }
-
-    const { email, role, guruProfile } = req.user;
+    const { email, role, guruProfile, kelas } = req.user;
 
     if (!guruProfile) {
       return res.status(404).json({ message: "Profil guru tidak ditemukan" });
     }
-    const { nik, name } = guruProfile;
-
-    const response = {
-      data: {
-        user: {
-          id: req.user.id,
-          email,
-          role,
-          guruProfile: {
-            nik,
-            name,
-          },
+    const { nik, name , noGuru , rfid} = guruProfile;
+    const { rfidNumb } = rfid || {};
+    const namaKelas = guruProfile?.Kelas?.name|| null;
+    const payload = {
+      user: {
+        id: req.user.id,
+        email,
+        role,
+        rfidNumb,
+        guruProfile: {
+          nik,
+          name,
+          noGuru,
+          namaKelas
         },
       },
     };
-
-    return res.status(200).json(response);
+    console.log(namaKelas)
+    return res.status(200).json(payload);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Terjadi kesalahan" });
@@ -223,7 +219,7 @@ export const inputKeteranganKehadiranMurid = async (req, res) => {
       include: {
         muridProfile: {
           include: {
-            waliMurids:true
+            waliMurids: true,
           },
         },
       },

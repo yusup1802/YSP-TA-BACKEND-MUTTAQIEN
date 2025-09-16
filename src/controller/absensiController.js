@@ -18,7 +18,7 @@ export const absensiByRfid = async (req, res) => {
     const rfidData = await prisma.rfid.findUnique({
       where: { rfidNumb: rfid },
       include: {
-        muridProfile: true, // atau tambah include lain yang valid
+        muridProfile: true, 
         guruProfile: true,
       },
     });

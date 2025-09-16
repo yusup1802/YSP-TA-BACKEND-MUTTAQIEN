@@ -31,31 +31,31 @@ export const updateEnv = async () => {
 
       // Ubah nilai untuk frontend dan backend
       const updatedData = data
-        .replace(/VITE_FRONTEND_NGROK=.*/, `VITE_FRONTEND_NGROK=${frontendUrl}`)
-        .replace(/VITE_BACKEND_NGROK=.*/, `VITE_BACKEND_NGROK=${backendUrl}`);
+        .replace(/VITE_FRONTEND=.*/, `VITE_FRONTEND=${frontendUrl}`)
+        .replace(/VITE_BACKEND=.*/, `VITE_BACKEND=${backendUrl}`);
       await fs.writeFile(envPath, updatedData, "utf8");
       console.log(
         `File .env berhasil diubah menjadi:\n\nFrontend: ${frontendUrl}\nBackend: ${backendUrl}\n\n`
       );
     } else {
       // Jika status bukan 200, log error dan throw
-      console.error(`Error: Status code ${response.status}`);
+      console.log("Ngrok gagal terhubung , reconnect ke localhost...");
       throw new Error("Failed to fetch ngrok tunnels");
     }
   } catch (error) {
-    console.error("Error fetching ngrok tunnels:", error);
+    // console.error("Error fetching ngrok tunnels:", error);
     // Jika ada kesalahan, set URL ke localhost sebagai fallback
     const envPath = path.join(process.cwd(), ".env");
     try {
       let data = await fs.readFile(envPath, "utf8");
       const updatedData = data
         .replace(
-          /VITE_FRONTEND_NGROK=.*/,
-          "VITE_FRONTEND_NGROK=http://localhost:5173"
+          /VITE_FRONTEND=.*/,
+          "VITE_FRONTEND=http://localhost:5173"
         )
         .replace(
-          /VITE_BACKEND_NGROK=.*/,
-          "VITE_BACKEND_NGROK=http://localhost:3000"
+          /VITE_BACKEND=.*/,
+          "VITE_BACKEND=http://localhost:3000"
         );
       await fs.writeFile(envPath, updatedData, "utf8");
       console.log(

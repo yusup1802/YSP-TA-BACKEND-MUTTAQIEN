@@ -53,7 +53,10 @@ const createFirstAdmin = async () => {
       },
     });
     if (adminCount === 0) {
-      const hashPassword = await bcrypt.hash(process.env.FIRST_ADMIN_PASSWORD,10);
+      const hashPassword = await bcrypt.hash(
+        process.env.FIRST_ADMIN_PASSWORD,
+        10
+      );
       await prisma.user.create({
         data: {
           email: process.env.FIRST_ADMIN_EMAIL,
@@ -65,13 +68,14 @@ const createFirstAdmin = async () => {
     }
   } catch (error) {
     console.log(error);
-    
+
     console.error("gagal membuat admin");
   } finally {
     await prisma.$disconnect();
   }
 };
-createFirstAdmin()
+createFirstAdmin();
+
 app.listen(process.env.PORT, () => {
   console.log(`Example app listening on port ${process.env.PORT}`);
 });

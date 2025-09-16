@@ -101,3 +101,18 @@
   "catatan": 123
 }
 ```
+
+
+#### Notifikasi Whatapps
+>diterima oleh murid
+
+	Pesan untuk orang tua murid 1 bahwa murid1 
+	tidak hadir pada 11 Juli 2025 karena izin.
+
+	Catatan: Mengikuti lomba antar sekolah
+>Pesan untuk wali murid
+
+	Pesan untuk Bapak walimurid1 bahwa murid1 
+	tidak hadir pada 11 Juli 2025 karena izin.
+
+	Catatan: Mengikuti lomba antar sekolah
