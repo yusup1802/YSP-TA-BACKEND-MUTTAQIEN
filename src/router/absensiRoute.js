@@ -2,7 +2,8 @@ import { Router } from "express";
 import {
   absensiByRfid,
   getAbsensiByUser,
-  daftarKehadiranHariIni
+  daftarKehadiranHariIni,
+  downloadHistoryAbsensi,
 } from "../controller/absensiController.js";
 import { authenticateAccessToken } from "#middleware/authMiddleware.js";
 import { validation } from "#middleware/validation.js";
@@ -15,5 +16,6 @@ validation(absensiByRfidSchema),
 absensiByRfid);
 router.get("/absensi", authenticateAccessToken, getAbsensiByUser);
 router.get("/absensi/today", authenticateAccessToken, daftarKehadiranHariIni);
+router.get("/absensi/download", authenticateAccessToken, downloadHistoryAbsensi);
 
 export default router;

@@ -1,5 +1,6 @@
-import { prisma } from "#configPath"; // ganti sesuai path aslimu
+import { prisma } from "#configPath";
 import { Twilio } from "./../utils/twilio.js";
+import XLSX from "xlsx";
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
@@ -317,8 +318,8 @@ export const daftarKehadiranHariIni = async (req, res) => {
 
     const hasil = { belumHadir, telahHadir, telahPulang };
     // console.log("Hasil Kehadiran:", hasil);
-    console.log(req.user.guruProfile)
-    
+    console.log(req.user.guruProfile);
+
     return res.status(200).json({
       statusCode: 200,
       message: "Daftar kehadiran hari ini",
@@ -333,4 +334,86 @@ export const daftarKehadiranHariIni = async (req, res) => {
       message: "Gagal mengambil daftar kehadiran hari ini",
     });
   }
+};
+
+export const downloadHistoryAbsensi = async (req, res) => {
+  const kelasId = req.user.guruProfile.Kelas.id;
+  const data = await prisma.kelas.findUnique({
+    where: { id: kelasId },
+    include: {
+      muridProfile: {
+        include: {
+          rfid: {
+            include: {
+              absensi: true, 
+            },
+          },
+          waliMurids: true,
+        },
+      },
+      waliKelas: true,
+    },
+  });
+  if (!data) {
+    return res.status(404).json({ message: "Kelas tidak ditemukan" });
+  }
+
+  // --- buat rows untuk Excel ---
+  const rows = [];
+  data.muridProfile.forEach((murid) => {
+    if (murid.rfid && murid.rfid.absensi.length > 0) {
+      murid.rfid.absensi.forEach((absen) => {
+        rows.push({
+          Kelas: data.name,
+          WaliKelas: data.waliKelas?.name ?? "",
+          NIS: murid.nis,
+          Nama: murid.name,
+          NoMurid: murid.noMurid,
+          RFID: murid.rfid.rfidNumb,
+          Keterangan: absen.keterangan,
+          Tanggal: new Date(absen.tanggal).toLocaleDateString("id-ID"),
+          JamHadir: absen.jamHadir
+            ? new Date(absen.jamHadir).toLocaleTimeString("id-ID")
+            : "",
+          JamPulang: absen.jamPulang
+            ? new Date(absen.jamPulang).toLocaleTimeString("id-ID")
+            : "",
+          Catatan: absen.catatan ?? "",
+        });
+      });
+    } else {
+      rows.push({
+        Kelas: data.name,
+        WaliKelas: data.waliKelas?.name ?? "",
+        NIS: murid.nis,
+        Nama: murid.name,
+        NoMurid: murid.noMurid,
+        RFID: murid.rfid?.rfidNumb ?? "",
+        Keterangan: "",
+        Tanggal: "",
+        JamHadir: "",
+        JamPulang: "",
+        Catatan: "",
+      });
+    }
+  });
+
+  // --- buat workbook & worksheet ---
+  const worksheet = XLSX.utils.json_to_sheet(rows);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Absensi");
+
+  // --- buffer ke response ---
+  const buffer = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" });
+
+  res.setHeader(
+    "Content-Disposition",
+    `attachment; filename=absensi_kelas_${data.name}.xlsx`
+  );
+  res.setHeader(
+    "Content-Type",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  );
+
+  res.send(buffer);
 };
