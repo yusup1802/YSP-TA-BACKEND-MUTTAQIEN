@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { getAllMuridByWaliKelas } from "../controller/kelasController.js";
-import { absenKehadiran } from "../controller/muridController.js";
 import { authenticateAccessToken } from "../middleware/authMiddleware.js";
 
 const router = Router();

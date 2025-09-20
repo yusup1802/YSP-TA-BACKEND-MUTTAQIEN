@@ -235,69 +235,6 @@ export const getMuridAbsensiByIdForGuru = async (req, res) => {
       .json({ message: "Terjadi kesalahan saat mengambil absensi murid." });
   }
 };
-// //done
-// export const getAbsensiByUserId = async (req, res) => {
-//   try {
-//     const userId = req.user.id;
-
-//     const user = await prisma.user.findUnique({
-//       where: { id: userId },
-//     });
-
-//     if (!user || !user.muridProfileId) {
-//       return res
-//         .status(404)
-//         .json({ message: "User tidak memiliki profil murid." });
-//     }
-
-//     req.params.muridId = user.muridProfileId;
-//     return getAbsensiByMuridId(req, res);
-//   } catch (error) {
-//     console.error("Gagal mengambil absensi:", error);
-//     res.status(500).json({ message: "Gagal mengambil absensi." });
-//   }
-// };
-
-//-----------lupa ----------------
-export const absenKehadiran = async (req, res) => {
-  const { guruProfileId, kelasId, absensi, muridProfileId } = req.body;
-  const currentDate = new Date();
-  const gmt7Date = new Date(currentDate.getTime() + 7 * 60 * 60 * 1000);
-  const existingAbsensi = await prisma.absensi.findUnique({
-    where: {
-      muridProfileId_tanggal_kelasId: {
-        muridProfileId,
-        tanggal: gmt7Date,
-        kelasId,
-      },
-    },
-  });
-
-  if (existingAbsensi) {
-    // Jika sudah ada, update jamPulang
-    const updatedAbsensi = await prisma.absensi.update({
-      where: {
-        id: existingAbsensi.id,
-      },
-      data: {
-        jamPulang: absensi, // Set jamPulang dari absensi yang diterima
-      },
-    });
-    res.status(200).json(updatedAbsensi);
-  } else {
-    // Jika belum ada, create absensi baru dengan jamHadir
-    const newAbsensi = await prisma.absensi.create({
-      data: {
-        muridProfileId,
-        guruProfileId,
-        kelasId,
-        tanggal: gmt7Date,
-        jamHadir: absensi, // Set jamHadir dari absensi yang diterima
-      },
-    });
-    res.status(201).json(newAbsensi);
-  }
-};
 
 //start helper editProfileMuridId
 export async function findMuridOrThrow(tx, muridId) {
