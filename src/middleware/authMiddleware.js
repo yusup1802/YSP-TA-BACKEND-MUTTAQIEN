@@ -1,9 +1,11 @@
 import jwt from "jsonwebtoken";
-import { passport} from '#auth/passport.js';
+import { passport } from "#auth/passport.js";
 export const authenticateRefreshToken = (req, res, next) => {
   const { refreshToken } = req.body; // Mengambil refresh token dari body
 
   if (!refreshToken) {
+    res.header("Access-Control-Allow-Origin", process.env.VITE_FRONTEND);
+    res.header("Access-Control-Allow-Credentials", "true");
     return res.status(403).json({ message: "Refresh token required" });
   }
   try {
@@ -11,6 +13,8 @@ export const authenticateRefreshToken = (req, res, next) => {
     req.user = decoded; // Menyimpan user yang terdecode ke dalam request
     next(); // Lanjutkan ke middleware berikutnya
   } catch (error) {
+    res.header("Access-Control-Allow-Origin", process.env.VITE_FRONTEND);
+    res.header("Access-Control-Allow-Credentials", "true");
     return res
       .status(403)
       .json({ message: "Invalid or expired refresh token" });
@@ -28,7 +32,7 @@ export const authenticateAccessToken = (req, res, next) => {
 
     if (err || !user) {
       console.log("message: Unauthorized");
-      
+
       return res.status(401).json({ message: "Unauthorized" });
     }
 

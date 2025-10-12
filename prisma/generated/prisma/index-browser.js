@@ -157,6 +157,7 @@ exports.Prisma.KelasScalarFieldEnum = {
 exports.Prisma.AbsensiScalarFieldEnum = {
   id: 'id',
   rfidNumb: 'rfidNumb',
+  muridId: 'muridId',
   keterangan: 'keterangan',
   tanggal: 'tanggal',
   jamHadir: 'jamHadir',
@@ -206,7 +207,8 @@ exports.Keterangan = exports.$Enums.Keterangan = {
   HADIR: 'HADIR',
   ALFA: 'ALFA',
   SAKIT: 'SAKIT',
-  IZIN: 'IZIN'
+  IZIN: 'IZIN',
+  PULANG: 'PULANG'
 };
 
 exports.Prisma.ModelName = {

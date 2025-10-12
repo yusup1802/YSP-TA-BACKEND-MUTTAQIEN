@@ -18,20 +18,9 @@ import { passport } from "#auth/passport.js";
 //   originalLog(...args);
 // };
 
-const sekarang = new Date();
-console.log(
-  sekarang.toLocaleString("id-ID", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false, // pakai 24 jam
-  })
-);
+console.log("Allowed origin:", process.env.VITE_FRONTEND);
 
+app.use(express.json());
 app.use(
   cors({
     origin: process.env.VITE_FRONTEND || "http://localhost:5173",
@@ -40,8 +29,7 @@ app.use(
     credentials: true,
   })
 );
-// app.use(cors());
-app.use(express.json());
+
 app.use(passport.initialize());
 app.use(RouterHttp);
 
@@ -75,6 +63,7 @@ const createFirstAdmin = async () => {
   }
 };
 createFirstAdmin();
+
 app.listen(process.env.PORT, () => {
   console.log(`Example app listening on port ${process.env.PORT}`);
 });

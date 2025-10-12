@@ -31,6 +31,7 @@ model MuridProfile {
   rfid       Rfid?
   User       User?
   waliMurids WaliMurid[]
+  absensi    Absensi[]
 }
 
 model WaliMurid {
@@ -62,9 +63,11 @@ model Kelas {
 }
 
 model Absensi {
-  id         Int        @id @default(autoincrement())
-  rfid       Rfid       @relation(fields: [rfidNumb], references: [rfidNumb])
-  rfidNumb   String
+  id         Int           @id @default(autoincrement())
+  rfid       Rfid?         @relation(fields: [rfidNumb], references: [rfidNumb])
+  rfidNumb   String?
+  murid      MuridProfile? @relation(fields: [muridId], references: [id])
+  muridId    Int?
   keterangan Keterangan
   tanggal    DateTime?
   jamHadir   DateTime?
@@ -72,6 +75,7 @@ model Absensi {
   catatan    String?
 
   @@unique([rfidNumb, tanggal])
+  @@unique([muridId, tanggal])
 }
 
 model JadwalTugas {
@@ -90,8 +94,8 @@ model JadwalTugas {
 }
 
 model Rfid {
-  id       Int    @id @default(autoincrement())
-  rfidNumb String @unique
+  id       Int     @id @default(autoincrement())
+  rfidNumb String? @unique
 
   muridProfileId Int?          @unique
   muridProfile   MuridProfile? @relation(fields: [muridProfileId], references: [id])
@@ -112,4 +116,5 @@ enum Keterangan {
   ALFA
   SAKIT
   IZIN
+  PULANG
 }

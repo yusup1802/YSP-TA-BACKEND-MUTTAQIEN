@@ -1,11 +1,13 @@
 import Joi from "joi";
 const createBaseUserSchema = {
   email: Joi.string().email().required().messages({
+    "string.empty": "Email tidak boleh kosong",
     "string.base": "Email harus berupa teks",
     "string.email": "Format email tidak valid",
     "any.required": "Email wajib diisi",
   }),
   password: Joi.string().min(5).required().messages({
+    "string.empty": "Password tidak boleh kosong",
     "string.base": "Password harus berupa teks",
     "string.min": "Password minimal 5 karakter",
     "any.required": "Password wajib diisi",
@@ -16,10 +18,8 @@ const baseProfile = {
     "any.required": "Nama wajib diisi",
     "string.empty": "Nama tidak boleh kosong",
   }),
-  rfidNumb: Joi.string().required().messages({
-    "any.required": "Nomor RFID wajib diisi",
+  rfidNumb: Joi.string().optional().allow("").messages({
     "string.base": "RFID harus berupa teks",
-    "string.empty": "Nomor RFID tidak boleh kosong",
   }),
 };
 

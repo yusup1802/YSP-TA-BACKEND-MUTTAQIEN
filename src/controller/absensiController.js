@@ -242,7 +242,19 @@ const kirimNotifikasiWhatsapp = async ({
 };
 
 export const daftarKehadiranHariIni = async (req, res) => {
-  const kelasId = req.user.guruProfile.Kelas.id;
+  //  console.log('User data:', JSON.stringify(req.user, null, 2));
+  // console.log('Guru Profile:', req.user.guruProfile);
+  // console.log('Kelas ID:', req.user.guruProfile?.Kelas?.id);
+  // console.log('Guru ID:', req.user.guruProfile?.id);
+
+  const kelasId = req.user.guruProfile?.Kelas?.id;
+  const guruId = req.user.guruProfile?.id;
+
+    if (!kelasId || !guruId) {
+    return res.status(400).json({
+      message: "Guru belum memiliki kelas",
+    });
+  }
   try {
     const gmt7Now = dayjs().tz("Asia/Jakarta");
     const startOfDay = gmt7Now.startOf("day").toDate();
@@ -257,19 +269,27 @@ export const daftarKehadiranHariIni = async (req, res) => {
         },
       },
       select: {
+        muridId: true,
         rfidNumb: true,
         jamHadir: true,
         jamPulang: true,
+        keterangan: true,
+        catatan: true,
       },
     });
 
-    // bikin map untuk akses cepat
-    const absensiMap = {};
+    const absensiMapByMuridId = {};
+    const absensiMapByRfid = {};
+
     absensiHariIni.forEach((a) => {
-      absensiMap[a.rfidNumb] = a;
+      if (a.rfidNumb) {
+        absensiMapByRfid[a.rfidNumb] = a;
+      }
+      if (a.muridId) {
+        absensiMapByMuridId[a.muridId] = a;
+      }
     });
 
-    // 2. Ambil semua murid dalam kelas
     const kelas = await prisma.kelas.findUnique({
       where: { id: kelasId },
       include: {
@@ -283,42 +303,104 @@ export const daftarKehadiranHariIni = async (req, res) => {
       },
     });
 
-    // 3. Kategorisasi murid
+    const guru = await prisma.guruProfile.findUnique({
+      where: { id: guruId },
+      select: {
+        id: true,
+        name: true,
+        rfid: { select: { rfidNumb: true } },
+      },
+    });
+
     const belumHadir = [];
     const telahHadir = [];
     const telahPulang = [];
+    const tidakHadir = [];
 
     kelas.muridProfile.forEach((murid) => {
       const rfidNumb = murid.rfid?.rfidNumb;
-      const absen = rfidNumb ? absensiMap[rfidNumb] : null;
+
+      let absen = rfidNumb ? absensiMapByRfid[rfidNumb] : null;
+      if (!absen && murid.id) {
+        absen = absensiMapByMuridId[murid.id];
+      }
 
       if (!absen) {
         belumHadir.push({
           id: murid.id,
           name: murid.name,
           rfid: murid.rfid,
+          muridId: murid.id,
         });
-      } else if (absen.jamHadir && !absen.jamPulang) {
+      } else if (
+        absen.keterangan === "HADIR" &&
+        absen.jamHadir &&
+        !absen.jamPulang
+      ) {
         telahHadir.push({
           id: murid.id,
           name: murid.name,
           rfid: murid.rfid,
+          muridId: murid.id,
           jamHadir: absen.jamHadir,
+          keterangan: absen.keterangan,
+          catatan: absen.catatan,
         });
-      } else if (absen.jamHadir && absen.jamPulang) {
+      } else if (absen.keterangan === "PULANG" && absen.jamHadir) {
         telahPulang.push({
           id: murid.id,
           name: murid.name,
           rfid: murid.rfid,
+          muridId: murid.id,
           jamHadir: absen.jamHadir,
           jamPulang: absen.jamPulang,
+          keterangan: absen.keterangan,
+          catatan: absen.catatan,
+        });
+      } else if (["IZIN", "SAKIT", "ALFA"].includes(absen.keterangan)) {
+        tidakHadir.push({
+          id: murid.id,
+          name: murid.name,
+          rfid: murid.rfid,
+          muridId: murid.id,
+          jamHadir: absen.jamHadir,
+          jamPulang: absen.jamPulang,
+          keterangan: absen.keterangan,
+          catatan: absen.catatan,
         });
       }
     });
 
-    const hasil = { belumHadir, telahHadir, telahPulang };
-    // console.log("Hasil Kehadiran:", hasil);
-    console.log(req.user.guruProfile);
+    let absensiGuru = null;
+    if (guru?.rfid?.rfidNumb) {
+      const absenGuru = absensiMapByRfid[guru.rfid.rfidNumb];
+      if (absenGuru) {
+        absensiGuru = {
+          id: guru.id,
+          name: guru.name,
+          rfid: guru.rfid,
+          jamHadir: absenGuru.jamHadir,
+          jamPulang: absenGuru.jamPulang,
+          keterangan: absenGuru.keterangan,
+          catatan: absenGuru.catatan,
+        };
+      } else {
+        absensiGuru = {
+          id: guru.id,
+          name: guru.name,
+          rfid: guru.rfid,
+          keterangan: "BELUM HADIR",
+        };
+      }
+    }
+
+    const hasil = {
+      belumHadir,
+      telahHadir,
+      telahPulang,
+      tidakHadir,
+      absensiGuru,
+    };
 
     return res.status(200).json({
       statusCode: 200,
@@ -337,83 +419,85 @@ export const daftarKehadiranHariIni = async (req, res) => {
 };
 
 export const downloadHistoryAbsensi = async (req, res) => {
-  const kelasId = req.user.guruProfile.Kelas.id;
-  const data = await prisma.kelas.findUnique({
-    where: { id: kelasId },
-    include: {
-      muridProfile: {
-        include: {
-          rfid: {
-            include: {
-              absensi: true, 
-            },
+  try {
+    const kelasId = req.user.guruProfile.Kelas.id;
+
+    const data = await prisma.kelas.findUnique({
+      where: { id: kelasId },
+      include: {
+        muridProfile: {
+          include: {
+            rfid: true,
+            waliMurids: true,
           },
-          waliMurids: true,
         },
+        waliKelas: true,
       },
-      waliKelas: true,
-    },
-  });
-  if (!data) {
-    return res.status(404).json({ message: "Kelas tidak ditemukan" });
-  }
+    });
 
-  // --- buat rows untuk Excel ---
-  const rows = [];
-  data.muridProfile.forEach((murid) => {
-    if (murid.rfid && murid.rfid.absensi.length > 0) {
-      murid.rfid.absensi.forEach((absen) => {
-        rows.push({
-          Kelas: data.name,
-          WaliKelas: data.waliKelas?.name ?? "",
-          NIS: murid.nis,
-          Nama: murid.name,
-          NoMurid: murid.noMurid,
-          RFID: murid.rfid.rfidNumb,
-          Keterangan: absen.keterangan,
-          Tanggal: new Date(absen.tanggal).toLocaleDateString("id-ID"),
-          JamHadir: absen.jamHadir
-            ? new Date(absen.jamHadir).toLocaleTimeString("id-ID")
-            : "",
-          JamPulang: absen.jamPulang
-            ? new Date(absen.jamPulang).toLocaleTimeString("id-ID")
-            : "",
-          Catatan: absen.catatan ?? "",
-        });
-      });
-    } else {
-      rows.push({
-        Kelas: data.name,
-        WaliKelas: data.waliKelas?.name ?? "",
-        NIS: murid.nis,
-        Nama: murid.name,
-        NoMurid: murid.noMurid,
-        RFID: murid.rfid?.rfidNumb ?? "",
-        Keterangan: "",
-        Tanggal: "",
-        JamHadir: "",
-        JamPulang: "",
-        Catatan: "",
-      });
+    if (!data) {
+      return res.status(404).json({ message: "Kelas tidak ditemukan" });
     }
-  });
 
-  // --- buat workbook & worksheet ---
-  const worksheet = XLSX.utils.json_to_sheet(rows);
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Absensi");
+    const rows = [];
 
-  // --- buffer ke response ---
-  const buffer = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" });
+    for (const murid of data.muridProfile) {
+      const rfidNumb = murid.rfid?.rfidNumb ?? null;
 
-  res.setHeader(
-    "Content-Disposition",
-    `attachment; filename=absensi_kelas_${data.name}.xlsx`
-  );
-  res.setHeader(
-    "Content-Type",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-  );
+      const absensiList = await prisma.absensi.findMany({
+        where: {
+          OR: [{ muridId: murid.id }, { rfidNumb: rfidNumb }],
+        },
+        orderBy: {
+          tanggal: "desc", 
+        },
+      });
 
-  res.send(buffer);
+      if (absensiList.length > 0) {
+        absensiList.forEach((absen) => {
+          rows.push({
+            Kelas: data.name,
+            "Wali Kelas": data.waliKelas?.name ?? "",
+            NIS: murid.nis,
+            Nama: murid.name,
+            "No Murid": murid.noMurid,
+            "Murid ID": murid.id,
+            RFID: rfidNumb ?? "",
+            Keterangan: absen.keterangan ?? "",
+            Tanggal: absen.tanggal
+              ? new Date(absen.tanggal).toLocaleString("id-ID")
+              : "",
+            Tercatat: absen.jamHadir
+              ? new Date(absen.jamHadir).toLocaleTimeString("id-ID")
+              : "",
+            "Jam Pulang": absen.jamPulang
+              ? new Date(absen.jamPulang).toLocaleTimeString("id-ID")
+              : "",
+            Catatan: absen.catatan ?? "",
+          });
+        });
+      }
+    }
+
+    // --- Buat Excel ---
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Absensi");
+
+    const buffer = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" });
+
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=absensi_kelas_${data.name}.xlsx`
+    );
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+
+    res.send(buffer);
+  } catch (error) {
+    console.error("❌ Error saat generate file absensi:", error);
+    res.status(500).json({ message: "Gagal mendownload data absensi" });
+  }
 };

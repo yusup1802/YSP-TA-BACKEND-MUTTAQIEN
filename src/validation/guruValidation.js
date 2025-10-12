@@ -86,11 +86,11 @@ export const inputKeteranganKehadiranSchema = Joi.object({
     "any.required": "RFID wajib diisi",
   }),
   keterangan: Joi.string()
-    .valid("IZIN", "SAKIT", "ALFA", "HADIR")
+    .valid("IZIN", "SAKIT", "ALFA", "HADIR", "PULANG")
     .required()
     .messages({
       "any.only":
-        "Keterangan harus salah satu dari IZIN, SAKIT, ALFA atau HADIR",
+        "Keterangan harus salah satu dari IZIN, SAKIT, ALFA , HADIR , PULANG",
       "any.required": "Keterangan wajib diisi",
     }),
   tanggal: strictIsoDate.label("Tanggal"),

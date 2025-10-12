@@ -295,12 +295,22 @@ export const createMurid = async (req, res) => {
           name,
           noMurid,
           kelasId,
-          rfid: {
-            connectOrCreate: {
-              where: { rfidNumb },
-              create: { rfidNumb },
-            },
-          },
+          // rfid: {
+          //   connectOrCreate: {
+          //     where: { rfidNumb },
+          //     create: { rfidNumb },
+          //   },
+          // },
+          ...(rfidNumb
+            ? {
+                rfid: {
+                  connectOrCreate: {
+                    where: { rfidNumb },
+                    create: { rfidNumb },
+                  },
+                },
+              }
+            : {}),
         },
       }),
       prisma.user.create({
@@ -345,7 +355,7 @@ export const getAllMurid = async (req, res) => {
       where: { role: "MURID" },
       select: {
         email: true,
-        muridProfile: true, // Ini menampilkan data terkait muridProfile
+        muridProfile: true,
       },
     });
     return res.status(200).json({

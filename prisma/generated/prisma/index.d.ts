@@ -71,7 +71,8 @@ export const Keterangan: {
   HADIR: 'HADIR',
   ALFA: 'ALFA',
   SAKIT: 'SAKIT',
-  IZIN: 'IZIN'
+  IZIN: 'IZIN',
+  PULANG: 'PULANG'
 };
 
 export type Keterangan = (typeof Keterangan)[keyof typeof Keterangan]
@@ -1539,10 +1540,12 @@ export namespace Prisma {
 
   export type MuridProfileCountOutputType = {
     waliMurids: number
+    absensi: number
   }
 
   export type MuridProfileCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     waliMurids?: boolean | MuridProfileCountOutputTypeCountWaliMuridsArgs
+    absensi?: boolean | MuridProfileCountOutputTypeCountAbsensiArgs
   }
 
   // Custom InputTypes
@@ -1561,6 +1564,13 @@ export namespace Prisma {
    */
   export type MuridProfileCountOutputTypeCountWaliMuridsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: WaliMuridWhereInput
+  }
+
+  /**
+   * MuridProfileCountOutputType without action
+   */
+  export type MuridProfileCountOutputTypeCountAbsensiArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AbsensiWhereInput
   }
 
 
@@ -3039,6 +3049,7 @@ export namespace Prisma {
     rfid?: boolean | MuridProfile$rfidArgs<ExtArgs>
     User?: boolean | MuridProfile$UserArgs<ExtArgs>
     waliMurids?: boolean | MuridProfile$waliMuridsArgs<ExtArgs>
+    absensi?: boolean | MuridProfile$absensiArgs<ExtArgs>
     _count?: boolean | MuridProfileCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["muridProfile"]>
 
@@ -3074,6 +3085,7 @@ export namespace Prisma {
     rfid?: boolean | MuridProfile$rfidArgs<ExtArgs>
     User?: boolean | MuridProfile$UserArgs<ExtArgs>
     waliMurids?: boolean | MuridProfile$waliMuridsArgs<ExtArgs>
+    absensi?: boolean | MuridProfile$absensiArgs<ExtArgs>
     _count?: boolean | MuridProfileCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type MuridProfileIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3090,6 +3102,7 @@ export namespace Prisma {
       rfid: Prisma.$RfidPayload<ExtArgs> | null
       User: Prisma.$UserPayload<ExtArgs> | null
       waliMurids: Prisma.$WaliMuridPayload<ExtArgs>[]
+      absensi: Prisma.$AbsensiPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -3495,6 +3508,7 @@ export namespace Prisma {
     rfid<T extends MuridProfile$rfidArgs<ExtArgs> = {}>(args?: Subset<T, MuridProfile$rfidArgs<ExtArgs>>): Prisma__RfidClient<$Result.GetResult<Prisma.$RfidPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     User<T extends MuridProfile$UserArgs<ExtArgs> = {}>(args?: Subset<T, MuridProfile$UserArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     waliMurids<T extends MuridProfile$waliMuridsArgs<ExtArgs> = {}>(args?: Subset<T, MuridProfile$waliMuridsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WaliMuridPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    absensi<T extends MuridProfile$absensiArgs<ExtArgs> = {}>(args?: Subset<T, MuridProfile$absensiArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AbsensiPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4003,6 +4017,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: WaliMuridScalarFieldEnum | WaliMuridScalarFieldEnum[]
+  }
+
+  /**
+   * MuridProfile.absensi
+   */
+  export type MuridProfile$absensiArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Absensi
+     */
+    select?: AbsensiSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Absensi
+     */
+    omit?: AbsensiOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AbsensiInclude<ExtArgs> | null
+    where?: AbsensiWhereInput
+    orderBy?: AbsensiOrderByWithRelationInput | AbsensiOrderByWithRelationInput[]
+    cursor?: AbsensiWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AbsensiScalarFieldEnum | AbsensiScalarFieldEnum[]
   }
 
   /**
@@ -7432,15 +7470,18 @@ export namespace Prisma {
 
   export type AbsensiAvgAggregateOutputType = {
     id: number | null
+    muridId: number | null
   }
 
   export type AbsensiSumAggregateOutputType = {
     id: number | null
+    muridId: number | null
   }
 
   export type AbsensiMinAggregateOutputType = {
     id: number | null
     rfidNumb: string | null
+    muridId: number | null
     keterangan: $Enums.Keterangan | null
     tanggal: Date | null
     jamHadir: Date | null
@@ -7451,6 +7492,7 @@ export namespace Prisma {
   export type AbsensiMaxAggregateOutputType = {
     id: number | null
     rfidNumb: string | null
+    muridId: number | null
     keterangan: $Enums.Keterangan | null
     tanggal: Date | null
     jamHadir: Date | null
@@ -7461,6 +7503,7 @@ export namespace Prisma {
   export type AbsensiCountAggregateOutputType = {
     id: number
     rfidNumb: number
+    muridId: number
     keterangan: number
     tanggal: number
     jamHadir: number
@@ -7472,15 +7515,18 @@ export namespace Prisma {
 
   export type AbsensiAvgAggregateInputType = {
     id?: true
+    muridId?: true
   }
 
   export type AbsensiSumAggregateInputType = {
     id?: true
+    muridId?: true
   }
 
   export type AbsensiMinAggregateInputType = {
     id?: true
     rfidNumb?: true
+    muridId?: true
     keterangan?: true
     tanggal?: true
     jamHadir?: true
@@ -7491,6 +7537,7 @@ export namespace Prisma {
   export type AbsensiMaxAggregateInputType = {
     id?: true
     rfidNumb?: true
+    muridId?: true
     keterangan?: true
     tanggal?: true
     jamHadir?: true
@@ -7501,6 +7548,7 @@ export namespace Prisma {
   export type AbsensiCountAggregateInputType = {
     id?: true
     rfidNumb?: true
+    muridId?: true
     keterangan?: true
     tanggal?: true
     jamHadir?: true
@@ -7597,7 +7645,8 @@ export namespace Prisma {
 
   export type AbsensiGroupByOutputType = {
     id: number
-    rfidNumb: string
+    rfidNumb: string | null
+    muridId: number | null
     keterangan: $Enums.Keterangan
     tanggal: Date | null
     jamHadir: Date | null
@@ -7627,39 +7676,46 @@ export namespace Prisma {
   export type AbsensiSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     rfidNumb?: boolean
+    muridId?: boolean
     keterangan?: boolean
     tanggal?: boolean
     jamHadir?: boolean
     jamPulang?: boolean
     catatan?: boolean
-    rfid?: boolean | RfidDefaultArgs<ExtArgs>
+    rfid?: boolean | Absensi$rfidArgs<ExtArgs>
+    murid?: boolean | Absensi$muridArgs<ExtArgs>
   }, ExtArgs["result"]["absensi"]>
 
   export type AbsensiSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     rfidNumb?: boolean
+    muridId?: boolean
     keterangan?: boolean
     tanggal?: boolean
     jamHadir?: boolean
     jamPulang?: boolean
     catatan?: boolean
-    rfid?: boolean | RfidDefaultArgs<ExtArgs>
+    rfid?: boolean | Absensi$rfidArgs<ExtArgs>
+    murid?: boolean | Absensi$muridArgs<ExtArgs>
   }, ExtArgs["result"]["absensi"]>
 
   export type AbsensiSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     rfidNumb?: boolean
+    muridId?: boolean
     keterangan?: boolean
     tanggal?: boolean
     jamHadir?: boolean
     jamPulang?: boolean
     catatan?: boolean
-    rfid?: boolean | RfidDefaultArgs<ExtArgs>
+    rfid?: boolean | Absensi$rfidArgs<ExtArgs>
+    murid?: boolean | Absensi$muridArgs<ExtArgs>
   }, ExtArgs["result"]["absensi"]>
 
   export type AbsensiSelectScalar = {
     id?: boolean
     rfidNumb?: boolean
+    muridId?: boolean
     keterangan?: boolean
     tanggal?: boolean
     jamHadir?: boolean
@@ -7667,25 +7723,30 @@ export namespace Prisma {
     catatan?: boolean
   }
 
-  export type AbsensiOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rfidNumb" | "keterangan" | "tanggal" | "jamHadir" | "jamPulang" | "catatan", ExtArgs["result"]["absensi"]>
+  export type AbsensiOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rfidNumb" | "muridId" | "keterangan" | "tanggal" | "jamHadir" | "jamPulang" | "catatan", ExtArgs["result"]["absensi"]>
   export type AbsensiInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    rfid?: boolean | RfidDefaultArgs<ExtArgs>
+    rfid?: boolean | Absensi$rfidArgs<ExtArgs>
+    murid?: boolean | Absensi$muridArgs<ExtArgs>
   }
   export type AbsensiIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    rfid?: boolean | RfidDefaultArgs<ExtArgs>
+    rfid?: boolean | Absensi$rfidArgs<ExtArgs>
+    murid?: boolean | Absensi$muridArgs<ExtArgs>
   }
   export type AbsensiIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    rfid?: boolean | RfidDefaultArgs<ExtArgs>
+    rfid?: boolean | Absensi$rfidArgs<ExtArgs>
+    murid?: boolean | Absensi$muridArgs<ExtArgs>
   }
 
   export type $AbsensiPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Absensi"
     objects: {
-      rfid: Prisma.$RfidPayload<ExtArgs>
+      rfid: Prisma.$RfidPayload<ExtArgs> | null
+      murid: Prisma.$MuridProfilePayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      rfidNumb: string
+      rfidNumb: string | null
+      muridId: number | null
       keterangan: $Enums.Keterangan
       tanggal: Date | null
       jamHadir: Date | null
@@ -8085,7 +8146,8 @@ export namespace Prisma {
    */
   export interface Prisma__AbsensiClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    rfid<T extends RfidDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RfidDefaultArgs<ExtArgs>>): Prisma__RfidClient<$Result.GetResult<Prisma.$RfidPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    rfid<T extends Absensi$rfidArgs<ExtArgs> = {}>(args?: Subset<T, Absensi$rfidArgs<ExtArgs>>): Prisma__RfidClient<$Result.GetResult<Prisma.$RfidPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    murid<T extends Absensi$muridArgs<ExtArgs> = {}>(args?: Subset<T, Absensi$muridArgs<ExtArgs>>): Prisma__MuridProfileClient<$Result.GetResult<Prisma.$MuridProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8117,6 +8179,7 @@ export namespace Prisma {
   interface AbsensiFieldRefs {
     readonly id: FieldRef<"Absensi", 'Int'>
     readonly rfidNumb: FieldRef<"Absensi", 'String'>
+    readonly muridId: FieldRef<"Absensi", 'Int'>
     readonly keterangan: FieldRef<"Absensi", 'Keterangan'>
     readonly tanggal: FieldRef<"Absensi", 'DateTime'>
     readonly jamHadir: FieldRef<"Absensi", 'DateTime'>
@@ -8515,6 +8578,44 @@ export namespace Prisma {
      * Limit how many Absensis to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Absensi.rfid
+   */
+  export type Absensi$rfidArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Rfid
+     */
+    select?: RfidSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Rfid
+     */
+    omit?: RfidOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RfidInclude<ExtArgs> | null
+    where?: RfidWhereInput
+  }
+
+  /**
+   * Absensi.murid
+   */
+  export type Absensi$muridArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MuridProfile
+     */
+    select?: MuridProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MuridProfile
+     */
+    omit?: MuridProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MuridProfileInclude<ExtArgs> | null
+    where?: MuridProfileWhereInput
   }
 
   /**
@@ -9852,7 +9953,7 @@ export namespace Prisma {
 
   export type RfidGroupByOutputType = {
     id: number
-    rfidNumb: string
+    rfidNumb: string | null
     muridProfileId: number | null
     guruProfileId: number | null
     _count: RfidCountAggregateOutputType | null
@@ -9937,7 +10038,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      rfidNumb: string
+      rfidNumb: string | null
       muridProfileId: number | null
       guruProfileId: number | null
     }, ExtArgs["result"]["rfid"]>
@@ -10588,7 +10689,7 @@ export namespace Prisma {
     /**
      * The data needed to create a Rfid.
      */
-    data: XOR<RfidCreateInput, RfidUncheckedCreateInput>
+    data?: XOR<RfidCreateInput, RfidUncheckedCreateInput>
   }
 
   /**
@@ -10915,6 +11016,7 @@ export namespace Prisma {
   export const AbsensiScalarFieldEnum: {
     id: 'id',
     rfidNumb: 'rfidNumb',
+    muridId: 'muridId',
     keterangan: 'keterangan',
     tanggal: 'tanggal',
     jamHadir: 'jamHadir',
@@ -11143,6 +11245,7 @@ export namespace Prisma {
     rfid?: XOR<RfidNullableScalarRelationFilter, RfidWhereInput> | null
     User?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     waliMurids?: WaliMuridListRelationFilter
+    absensi?: AbsensiListRelationFilter
   }
 
   export type MuridProfileOrderByWithRelationInput = {
@@ -11155,6 +11258,7 @@ export namespace Prisma {
     rfid?: RfidOrderByWithRelationInput
     User?: UserOrderByWithRelationInput
     waliMurids?: WaliMuridOrderByRelationAggregateInput
+    absensi?: AbsensiOrderByRelationAggregateInput
   }
 
   export type MuridProfileWhereUniqueInput = Prisma.AtLeast<{
@@ -11170,6 +11274,7 @@ export namespace Prisma {
     rfid?: XOR<RfidNullableScalarRelationFilter, RfidWhereInput> | null
     User?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     waliMurids?: WaliMuridListRelationFilter
+    absensi?: AbsensiListRelationFilter
   }, "id" | "nis" | "noMurid">
 
   export type MuridProfileOrderByWithAggregationInput = {
@@ -11367,44 +11472,52 @@ export namespace Prisma {
     OR?: AbsensiWhereInput[]
     NOT?: AbsensiWhereInput | AbsensiWhereInput[]
     id?: IntFilter<"Absensi"> | number
-    rfidNumb?: StringFilter<"Absensi"> | string
+    rfidNumb?: StringNullableFilter<"Absensi"> | string | null
+    muridId?: IntNullableFilter<"Absensi"> | number | null
     keterangan?: EnumKeteranganFilter<"Absensi"> | $Enums.Keterangan
     tanggal?: DateTimeNullableFilter<"Absensi"> | Date | string | null
     jamHadir?: DateTimeNullableFilter<"Absensi"> | Date | string | null
     jamPulang?: DateTimeNullableFilter<"Absensi"> | Date | string | null
     catatan?: StringNullableFilter<"Absensi"> | string | null
-    rfid?: XOR<RfidScalarRelationFilter, RfidWhereInput>
+    rfid?: XOR<RfidNullableScalarRelationFilter, RfidWhereInput> | null
+    murid?: XOR<MuridProfileNullableScalarRelationFilter, MuridProfileWhereInput> | null
   }
 
   export type AbsensiOrderByWithRelationInput = {
     id?: SortOrder
-    rfidNumb?: SortOrder
+    rfidNumb?: SortOrderInput | SortOrder
+    muridId?: SortOrderInput | SortOrder
     keterangan?: SortOrder
     tanggal?: SortOrderInput | SortOrder
     jamHadir?: SortOrderInput | SortOrder
     jamPulang?: SortOrderInput | SortOrder
     catatan?: SortOrderInput | SortOrder
     rfid?: RfidOrderByWithRelationInput
+    murid?: MuridProfileOrderByWithRelationInput
   }
 
   export type AbsensiWhereUniqueInput = Prisma.AtLeast<{
     id?: number
     rfidNumb_tanggal?: AbsensiRfidNumbTanggalCompoundUniqueInput
+    muridId_tanggal?: AbsensiMuridIdTanggalCompoundUniqueInput
     AND?: AbsensiWhereInput | AbsensiWhereInput[]
     OR?: AbsensiWhereInput[]
     NOT?: AbsensiWhereInput | AbsensiWhereInput[]
-    rfidNumb?: StringFilter<"Absensi"> | string
+    rfidNumb?: StringNullableFilter<"Absensi"> | string | null
+    muridId?: IntNullableFilter<"Absensi"> | number | null
     keterangan?: EnumKeteranganFilter<"Absensi"> | $Enums.Keterangan
     tanggal?: DateTimeNullableFilter<"Absensi"> | Date | string | null
     jamHadir?: DateTimeNullableFilter<"Absensi"> | Date | string | null
     jamPulang?: DateTimeNullableFilter<"Absensi"> | Date | string | null
     catatan?: StringNullableFilter<"Absensi"> | string | null
-    rfid?: XOR<RfidScalarRelationFilter, RfidWhereInput>
-  }, "id" | "rfidNumb_tanggal">
+    rfid?: XOR<RfidNullableScalarRelationFilter, RfidWhereInput> | null
+    murid?: XOR<MuridProfileNullableScalarRelationFilter, MuridProfileWhereInput> | null
+  }, "id" | "rfidNumb_tanggal" | "muridId_tanggal">
 
   export type AbsensiOrderByWithAggregationInput = {
     id?: SortOrder
-    rfidNumb?: SortOrder
+    rfidNumb?: SortOrderInput | SortOrder
+    muridId?: SortOrderInput | SortOrder
     keterangan?: SortOrder
     tanggal?: SortOrderInput | SortOrder
     jamHadir?: SortOrderInput | SortOrder
@@ -11422,7 +11535,8 @@ export namespace Prisma {
     OR?: AbsensiScalarWhereWithAggregatesInput[]
     NOT?: AbsensiScalarWhereWithAggregatesInput | AbsensiScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Absensi"> | number
-    rfidNumb?: StringWithAggregatesFilter<"Absensi"> | string
+    rfidNumb?: StringNullableWithAggregatesFilter<"Absensi"> | string | null
+    muridId?: IntNullableWithAggregatesFilter<"Absensi"> | number | null
     keterangan?: EnumKeteranganWithAggregatesFilter<"Absensi"> | $Enums.Keterangan
     tanggal?: DateTimeNullableWithAggregatesFilter<"Absensi"> | Date | string | null
     jamHadir?: DateTimeNullableWithAggregatesFilter<"Absensi"> | Date | string | null
@@ -11511,7 +11625,7 @@ export namespace Prisma {
     OR?: RfidWhereInput[]
     NOT?: RfidWhereInput | RfidWhereInput[]
     id?: IntFilter<"Rfid"> | number
-    rfidNumb?: StringFilter<"Rfid"> | string
+    rfidNumb?: StringNullableFilter<"Rfid"> | string | null
     muridProfileId?: IntNullableFilter<"Rfid"> | number | null
     guruProfileId?: IntNullableFilter<"Rfid"> | number | null
     muridProfile?: XOR<MuridProfileNullableScalarRelationFilter, MuridProfileWhereInput> | null
@@ -11521,7 +11635,7 @@ export namespace Prisma {
 
   export type RfidOrderByWithRelationInput = {
     id?: SortOrder
-    rfidNumb?: SortOrder
+    rfidNumb?: SortOrderInput | SortOrder
     muridProfileId?: SortOrderInput | SortOrder
     guruProfileId?: SortOrderInput | SortOrder
     muridProfile?: MuridProfileOrderByWithRelationInput
@@ -11544,7 +11658,7 @@ export namespace Prisma {
 
   export type RfidOrderByWithAggregationInput = {
     id?: SortOrder
-    rfidNumb?: SortOrder
+    rfidNumb?: SortOrderInput | SortOrder
     muridProfileId?: SortOrderInput | SortOrder
     guruProfileId?: SortOrderInput | SortOrder
     _count?: RfidCountOrderByAggregateInput
@@ -11559,7 +11673,7 @@ export namespace Prisma {
     OR?: RfidScalarWhereWithAggregatesInput[]
     NOT?: RfidScalarWhereWithAggregatesInput | RfidScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Rfid"> | number
-    rfidNumb?: StringWithAggregatesFilter<"Rfid"> | string
+    rfidNumb?: StringNullableWithAggregatesFilter<"Rfid"> | string | null
     muridProfileId?: IntNullableWithAggregatesFilter<"Rfid"> | number | null
     guruProfileId?: IntNullableWithAggregatesFilter<"Rfid"> | number | null
   }
@@ -11630,6 +11744,7 @@ export namespace Prisma {
     rfid?: RfidCreateNestedOneWithoutMuridProfileInput
     User?: UserCreateNestedOneWithoutMuridProfileInput
     waliMurids?: WaliMuridCreateNestedManyWithoutMuridInput
+    absensi?: AbsensiCreateNestedManyWithoutMuridInput
   }
 
   export type MuridProfileUncheckedCreateInput = {
@@ -11641,6 +11756,7 @@ export namespace Prisma {
     rfid?: RfidUncheckedCreateNestedOneWithoutMuridProfileInput
     User?: UserUncheckedCreateNestedOneWithoutMuridProfileInput
     waliMurids?: WaliMuridUncheckedCreateNestedManyWithoutMuridInput
+    absensi?: AbsensiUncheckedCreateNestedManyWithoutMuridInput
   }
 
   export type MuridProfileUpdateInput = {
@@ -11651,6 +11767,7 @@ export namespace Prisma {
     rfid?: RfidUpdateOneWithoutMuridProfileNestedInput
     User?: UserUpdateOneWithoutMuridProfileNestedInput
     waliMurids?: WaliMuridUpdateManyWithoutMuridNestedInput
+    absensi?: AbsensiUpdateManyWithoutMuridNestedInput
   }
 
   export type MuridProfileUncheckedUpdateInput = {
@@ -11662,6 +11779,7 @@ export namespace Prisma {
     rfid?: RfidUncheckedUpdateOneWithoutMuridProfileNestedInput
     User?: UserUncheckedUpdateOneWithoutMuridProfileNestedInput
     waliMurids?: WaliMuridUncheckedUpdateManyWithoutMuridNestedInput
+    absensi?: AbsensiUncheckedUpdateManyWithoutMuridNestedInput
   }
 
   export type MuridProfileCreateManyInput = {
@@ -11845,12 +11963,14 @@ export namespace Prisma {
     jamHadir?: Date | string | null
     jamPulang?: Date | string | null
     catatan?: string | null
-    rfid: RfidCreateNestedOneWithoutAbsensiInput
+    rfid?: RfidCreateNestedOneWithoutAbsensiInput
+    murid?: MuridProfileCreateNestedOneWithoutAbsensiInput
   }
 
   export type AbsensiUncheckedCreateInput = {
     id?: number
-    rfidNumb: string
+    rfidNumb?: string | null
+    muridId?: number | null
     keterangan: $Enums.Keterangan
     tanggal?: Date | string | null
     jamHadir?: Date | string | null
@@ -11864,12 +11984,14 @@ export namespace Prisma {
     jamHadir?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     jamPulang?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     catatan?: NullableStringFieldUpdateOperationsInput | string | null
-    rfid?: RfidUpdateOneRequiredWithoutAbsensiNestedInput
+    rfid?: RfidUpdateOneWithoutAbsensiNestedInput
+    murid?: MuridProfileUpdateOneWithoutAbsensiNestedInput
   }
 
   export type AbsensiUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    rfidNumb?: StringFieldUpdateOperationsInput | string
+    rfidNumb?: NullableStringFieldUpdateOperationsInput | string | null
+    muridId?: NullableIntFieldUpdateOperationsInput | number | null
     keterangan?: EnumKeteranganFieldUpdateOperationsInput | $Enums.Keterangan
     tanggal?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     jamHadir?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11879,7 +12001,8 @@ export namespace Prisma {
 
   export type AbsensiCreateManyInput = {
     id?: number
-    rfidNumb: string
+    rfidNumb?: string | null
+    muridId?: number | null
     keterangan: $Enums.Keterangan
     tanggal?: Date | string | null
     jamHadir?: Date | string | null
@@ -11897,7 +12020,8 @@ export namespace Prisma {
 
   export type AbsensiUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    rfidNumb?: StringFieldUpdateOperationsInput | string
+    rfidNumb?: NullableStringFieldUpdateOperationsInput | string | null
+    muridId?: NullableIntFieldUpdateOperationsInput | number | null
     keterangan?: EnumKeteranganFieldUpdateOperationsInput | $Enums.Keterangan
     tanggal?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     jamHadir?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11978,7 +12102,7 @@ export namespace Prisma {
   }
 
   export type RfidCreateInput = {
-    rfidNumb: string
+    rfidNumb?: string | null
     muridProfile?: MuridProfileCreateNestedOneWithoutRfidInput
     guruProfile?: GuruProfileCreateNestedOneWithoutRfidInput
     absensi?: AbsensiCreateNestedManyWithoutRfidInput
@@ -11986,14 +12110,14 @@ export namespace Prisma {
 
   export type RfidUncheckedCreateInput = {
     id?: number
-    rfidNumb: string
+    rfidNumb?: string | null
     muridProfileId?: number | null
     guruProfileId?: number | null
     absensi?: AbsensiUncheckedCreateNestedManyWithoutRfidInput
   }
 
   export type RfidUpdateInput = {
-    rfidNumb?: StringFieldUpdateOperationsInput | string
+    rfidNumb?: NullableStringFieldUpdateOperationsInput | string | null
     muridProfile?: MuridProfileUpdateOneWithoutRfidNestedInput
     guruProfile?: GuruProfileUpdateOneWithoutRfidNestedInput
     absensi?: AbsensiUpdateManyWithoutRfidNestedInput
@@ -12001,7 +12125,7 @@ export namespace Prisma {
 
   export type RfidUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    rfidNumb?: StringFieldUpdateOperationsInput | string
+    rfidNumb?: NullableStringFieldUpdateOperationsInput | string | null
     muridProfileId?: NullableIntFieldUpdateOperationsInput | number | null
     guruProfileId?: NullableIntFieldUpdateOperationsInput | number | null
     absensi?: AbsensiUncheckedUpdateManyWithoutRfidNestedInput
@@ -12009,18 +12133,18 @@ export namespace Prisma {
 
   export type RfidCreateManyInput = {
     id?: number
-    rfidNumb: string
+    rfidNumb?: string | null
     muridProfileId?: number | null
     guruProfileId?: number | null
   }
 
   export type RfidUpdateManyMutationInput = {
-    rfidNumb?: StringFieldUpdateOperationsInput | string
+    rfidNumb?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type RfidUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    rfidNumb?: StringFieldUpdateOperationsInput | string
+    rfidNumb?: NullableStringFieldUpdateOperationsInput | string | null
     muridProfileId?: NullableIntFieldUpdateOperationsInput | number | null
     guruProfileId?: NullableIntFieldUpdateOperationsInput | number | null
   }
@@ -12219,7 +12343,17 @@ export namespace Prisma {
     none?: WaliMuridWhereInput
   }
 
+  export type AbsensiListRelationFilter = {
+    every?: AbsensiWhereInput
+    some?: AbsensiWhereInput
+    none?: AbsensiWhereInput
+  }
+
   export type WaliMuridOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AbsensiOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -12410,19 +12544,20 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
-  export type RfidScalarRelationFilter = {
-    is?: RfidWhereInput
-    isNot?: RfidWhereInput
-  }
-
   export type AbsensiRfidNumbTanggalCompoundUniqueInput = {
     rfidNumb: string
+    tanggal: Date | string
+  }
+
+  export type AbsensiMuridIdTanggalCompoundUniqueInput = {
+    muridId: number
     tanggal: Date | string
   }
 
   export type AbsensiCountOrderByAggregateInput = {
     id?: SortOrder
     rfidNumb?: SortOrder
+    muridId?: SortOrder
     keterangan?: SortOrder
     tanggal?: SortOrder
     jamHadir?: SortOrder
@@ -12432,11 +12567,13 @@ export namespace Prisma {
 
   export type AbsensiAvgOrderByAggregateInput = {
     id?: SortOrder
+    muridId?: SortOrder
   }
 
   export type AbsensiMaxOrderByAggregateInput = {
     id?: SortOrder
     rfidNumb?: SortOrder
+    muridId?: SortOrder
     keterangan?: SortOrder
     tanggal?: SortOrder
     jamHadir?: SortOrder
@@ -12447,6 +12584,7 @@ export namespace Prisma {
   export type AbsensiMinOrderByAggregateInput = {
     id?: SortOrder
     rfidNumb?: SortOrder
+    muridId?: SortOrder
     keterangan?: SortOrder
     tanggal?: SortOrder
     jamHadir?: SortOrder
@@ -12456,6 +12594,7 @@ export namespace Prisma {
 
   export type AbsensiSumOrderByAggregateInput = {
     id?: SortOrder
+    muridId?: SortOrder
   }
 
   export type EnumKeteranganWithAggregatesFilter<$PrismaModel = never> = {
@@ -12567,16 +12706,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
-  export type AbsensiListRelationFilter = {
-    every?: AbsensiWhereInput
-    some?: AbsensiWhereInput
-    none?: AbsensiWhereInput
-  }
-
-  export type AbsensiOrderByRelationAggregateInput = {
-    _count?: SortOrder
   }
 
   export type RfidCountOrderByAggregateInput = {
@@ -12693,6 +12822,13 @@ export namespace Prisma {
     connect?: WaliMuridWhereUniqueInput | WaliMuridWhereUniqueInput[]
   }
 
+  export type AbsensiCreateNestedManyWithoutMuridInput = {
+    create?: XOR<AbsensiCreateWithoutMuridInput, AbsensiUncheckedCreateWithoutMuridInput> | AbsensiCreateWithoutMuridInput[] | AbsensiUncheckedCreateWithoutMuridInput[]
+    connectOrCreate?: AbsensiCreateOrConnectWithoutMuridInput | AbsensiCreateOrConnectWithoutMuridInput[]
+    createMany?: AbsensiCreateManyMuridInputEnvelope
+    connect?: AbsensiWhereUniqueInput | AbsensiWhereUniqueInput[]
+  }
+
   export type RfidUncheckedCreateNestedOneWithoutMuridProfileInput = {
     create?: XOR<RfidCreateWithoutMuridProfileInput, RfidUncheckedCreateWithoutMuridProfileInput>
     connectOrCreate?: RfidCreateOrConnectWithoutMuridProfileInput
@@ -12710,6 +12846,13 @@ export namespace Prisma {
     connectOrCreate?: WaliMuridCreateOrConnectWithoutMuridInput | WaliMuridCreateOrConnectWithoutMuridInput[]
     createMany?: WaliMuridCreateManyMuridInputEnvelope
     connect?: WaliMuridWhereUniqueInput | WaliMuridWhereUniqueInput[]
+  }
+
+  export type AbsensiUncheckedCreateNestedManyWithoutMuridInput = {
+    create?: XOR<AbsensiCreateWithoutMuridInput, AbsensiUncheckedCreateWithoutMuridInput> | AbsensiCreateWithoutMuridInput[] | AbsensiUncheckedCreateWithoutMuridInput[]
+    connectOrCreate?: AbsensiCreateOrConnectWithoutMuridInput | AbsensiCreateOrConnectWithoutMuridInput[]
+    createMany?: AbsensiCreateManyMuridInputEnvelope
+    connect?: AbsensiWhereUniqueInput | AbsensiWhereUniqueInput[]
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
@@ -12760,6 +12903,20 @@ export namespace Prisma {
     deleteMany?: WaliMuridScalarWhereInput | WaliMuridScalarWhereInput[]
   }
 
+  export type AbsensiUpdateManyWithoutMuridNestedInput = {
+    create?: XOR<AbsensiCreateWithoutMuridInput, AbsensiUncheckedCreateWithoutMuridInput> | AbsensiCreateWithoutMuridInput[] | AbsensiUncheckedCreateWithoutMuridInput[]
+    connectOrCreate?: AbsensiCreateOrConnectWithoutMuridInput | AbsensiCreateOrConnectWithoutMuridInput[]
+    upsert?: AbsensiUpsertWithWhereUniqueWithoutMuridInput | AbsensiUpsertWithWhereUniqueWithoutMuridInput[]
+    createMany?: AbsensiCreateManyMuridInputEnvelope
+    set?: AbsensiWhereUniqueInput | AbsensiWhereUniqueInput[]
+    disconnect?: AbsensiWhereUniqueInput | AbsensiWhereUniqueInput[]
+    delete?: AbsensiWhereUniqueInput | AbsensiWhereUniqueInput[]
+    connect?: AbsensiWhereUniqueInput | AbsensiWhereUniqueInput[]
+    update?: AbsensiUpdateWithWhereUniqueWithoutMuridInput | AbsensiUpdateWithWhereUniqueWithoutMuridInput[]
+    updateMany?: AbsensiUpdateManyWithWhereWithoutMuridInput | AbsensiUpdateManyWithWhereWithoutMuridInput[]
+    deleteMany?: AbsensiScalarWhereInput | AbsensiScalarWhereInput[]
+  }
+
   export type RfidUncheckedUpdateOneWithoutMuridProfileNestedInput = {
     create?: XOR<RfidCreateWithoutMuridProfileInput, RfidUncheckedCreateWithoutMuridProfileInput>
     connectOrCreate?: RfidCreateOrConnectWithoutMuridProfileInput
@@ -12792,6 +12949,20 @@ export namespace Prisma {
     update?: WaliMuridUpdateWithWhereUniqueWithoutMuridInput | WaliMuridUpdateWithWhereUniqueWithoutMuridInput[]
     updateMany?: WaliMuridUpdateManyWithWhereWithoutMuridInput | WaliMuridUpdateManyWithWhereWithoutMuridInput[]
     deleteMany?: WaliMuridScalarWhereInput | WaliMuridScalarWhereInput[]
+  }
+
+  export type AbsensiUncheckedUpdateManyWithoutMuridNestedInput = {
+    create?: XOR<AbsensiCreateWithoutMuridInput, AbsensiUncheckedCreateWithoutMuridInput> | AbsensiCreateWithoutMuridInput[] | AbsensiUncheckedCreateWithoutMuridInput[]
+    connectOrCreate?: AbsensiCreateOrConnectWithoutMuridInput | AbsensiCreateOrConnectWithoutMuridInput[]
+    upsert?: AbsensiUpsertWithWhereUniqueWithoutMuridInput | AbsensiUpsertWithWhereUniqueWithoutMuridInput[]
+    createMany?: AbsensiCreateManyMuridInputEnvelope
+    set?: AbsensiWhereUniqueInput | AbsensiWhereUniqueInput[]
+    disconnect?: AbsensiWhereUniqueInput | AbsensiWhereUniqueInput[]
+    delete?: AbsensiWhereUniqueInput | AbsensiWhereUniqueInput[]
+    connect?: AbsensiWhereUniqueInput | AbsensiWhereUniqueInput[]
+    update?: AbsensiUpdateWithWhereUniqueWithoutMuridInput | AbsensiUpdateWithWhereUniqueWithoutMuridInput[]
+    updateMany?: AbsensiUpdateManyWithWhereWithoutMuridInput | AbsensiUpdateManyWithWhereWithoutMuridInput[]
+    deleteMany?: AbsensiScalarWhereInput | AbsensiScalarWhereInput[]
   }
 
   export type MuridProfileCreateNestedOneWithoutWaliMuridsInput = {
@@ -13052,6 +13223,12 @@ export namespace Prisma {
     connect?: RfidWhereUniqueInput
   }
 
+  export type MuridProfileCreateNestedOneWithoutAbsensiInput = {
+    create?: XOR<MuridProfileCreateWithoutAbsensiInput, MuridProfileUncheckedCreateWithoutAbsensiInput>
+    connectOrCreate?: MuridProfileCreateOrConnectWithoutAbsensiInput
+    connect?: MuridProfileWhereUniqueInput
+  }
+
   export type EnumKeteranganFieldUpdateOperationsInput = {
     set?: $Enums.Keterangan
   }
@@ -13060,12 +13237,24 @@ export namespace Prisma {
     set?: Date | string | null
   }
 
-  export type RfidUpdateOneRequiredWithoutAbsensiNestedInput = {
+  export type RfidUpdateOneWithoutAbsensiNestedInput = {
     create?: XOR<RfidCreateWithoutAbsensiInput, RfidUncheckedCreateWithoutAbsensiInput>
     connectOrCreate?: RfidCreateOrConnectWithoutAbsensiInput
     upsert?: RfidUpsertWithoutAbsensiInput
+    disconnect?: RfidWhereInput | boolean
+    delete?: RfidWhereInput | boolean
     connect?: RfidWhereUniqueInput
     update?: XOR<XOR<RfidUpdateToOneWithWhereWithoutAbsensiInput, RfidUpdateWithoutAbsensiInput>, RfidUncheckedUpdateWithoutAbsensiInput>
+  }
+
+  export type MuridProfileUpdateOneWithoutAbsensiNestedInput = {
+    create?: XOR<MuridProfileCreateWithoutAbsensiInput, MuridProfileUncheckedCreateWithoutAbsensiInput>
+    connectOrCreate?: MuridProfileCreateOrConnectWithoutAbsensiInput
+    upsert?: MuridProfileUpsertWithoutAbsensiInput
+    disconnect?: MuridProfileWhereInput | boolean
+    delete?: MuridProfileWhereInput | boolean
+    connect?: MuridProfileWhereUniqueInput
+    update?: XOR<XOR<MuridProfileUpdateToOneWithWhereWithoutAbsensiInput, MuridProfileUpdateWithoutAbsensiInput>, MuridProfileUncheckedUpdateWithoutAbsensiInput>
   }
 
   export type GuruProfileCreateNestedOneWithoutJadwalTugasInput = {
@@ -13403,6 +13592,7 @@ export namespace Prisma {
     kelas?: KelasCreateNestedOneWithoutMuridProfileInput
     rfid?: RfidCreateNestedOneWithoutMuridProfileInput
     waliMurids?: WaliMuridCreateNestedManyWithoutMuridInput
+    absensi?: AbsensiCreateNestedManyWithoutMuridInput
   }
 
   export type MuridProfileUncheckedCreateWithoutUserInput = {
@@ -13413,6 +13603,7 @@ export namespace Prisma {
     kelasId?: number | null
     rfid?: RfidUncheckedCreateNestedOneWithoutMuridProfileInput
     waliMurids?: WaliMuridUncheckedCreateNestedManyWithoutMuridInput
+    absensi?: AbsensiUncheckedCreateNestedManyWithoutMuridInput
   }
 
   export type MuridProfileCreateOrConnectWithoutUserInput = {
@@ -13462,6 +13653,7 @@ export namespace Prisma {
     kelas?: KelasUpdateOneWithoutMuridProfileNestedInput
     rfid?: RfidUpdateOneWithoutMuridProfileNestedInput
     waliMurids?: WaliMuridUpdateManyWithoutMuridNestedInput
+    absensi?: AbsensiUpdateManyWithoutMuridNestedInput
   }
 
   export type MuridProfileUncheckedUpdateWithoutUserInput = {
@@ -13472,6 +13664,7 @@ export namespace Prisma {
     kelasId?: NullableIntFieldUpdateOperationsInput | number | null
     rfid?: RfidUncheckedUpdateOneWithoutMuridProfileNestedInput
     waliMurids?: WaliMuridUncheckedUpdateManyWithoutMuridNestedInput
+    absensi?: AbsensiUncheckedUpdateManyWithoutMuridNestedInput
   }
 
   export type GuruProfileUpsertWithoutUserInput = {
@@ -13523,14 +13716,14 @@ export namespace Prisma {
   }
 
   export type RfidCreateWithoutMuridProfileInput = {
-    rfidNumb: string
+    rfidNumb?: string | null
     guruProfile?: GuruProfileCreateNestedOneWithoutRfidInput
     absensi?: AbsensiCreateNestedManyWithoutRfidInput
   }
 
   export type RfidUncheckedCreateWithoutMuridProfileInput = {
     id?: number
-    rfidNumb: string
+    rfidNumb?: string | null
     guruProfileId?: number | null
     absensi?: AbsensiUncheckedCreateNestedManyWithoutRfidInput
   }
@@ -13581,6 +13774,35 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type AbsensiCreateWithoutMuridInput = {
+    keterangan: $Enums.Keterangan
+    tanggal?: Date | string | null
+    jamHadir?: Date | string | null
+    jamPulang?: Date | string | null
+    catatan?: string | null
+    rfid?: RfidCreateNestedOneWithoutAbsensiInput
+  }
+
+  export type AbsensiUncheckedCreateWithoutMuridInput = {
+    id?: number
+    rfidNumb?: string | null
+    keterangan: $Enums.Keterangan
+    tanggal?: Date | string | null
+    jamHadir?: Date | string | null
+    jamPulang?: Date | string | null
+    catatan?: string | null
+  }
+
+  export type AbsensiCreateOrConnectWithoutMuridInput = {
+    where: AbsensiWhereUniqueInput
+    create: XOR<AbsensiCreateWithoutMuridInput, AbsensiUncheckedCreateWithoutMuridInput>
+  }
+
+  export type AbsensiCreateManyMuridInputEnvelope = {
+    data: AbsensiCreateManyMuridInput | AbsensiCreateManyMuridInput[]
+    skipDuplicates?: boolean
+  }
+
   export type KelasUpsertWithoutMuridProfileInput = {
     update: XOR<KelasUpdateWithoutMuridProfileInput, KelasUncheckedUpdateWithoutMuridProfileInput>
     create: XOR<KelasCreateWithoutMuridProfileInput, KelasUncheckedCreateWithoutMuridProfileInput>
@@ -13617,14 +13839,14 @@ export namespace Prisma {
   }
 
   export type RfidUpdateWithoutMuridProfileInput = {
-    rfidNumb?: StringFieldUpdateOperationsInput | string
+    rfidNumb?: NullableStringFieldUpdateOperationsInput | string | null
     guruProfile?: GuruProfileUpdateOneWithoutRfidNestedInput
     absensi?: AbsensiUpdateManyWithoutRfidNestedInput
   }
 
   export type RfidUncheckedUpdateWithoutMuridProfileInput = {
     id?: IntFieldUpdateOperationsInput | number
-    rfidNumb?: StringFieldUpdateOperationsInput | string
+    rfidNumb?: NullableStringFieldUpdateOperationsInput | string | null
     guruProfileId?: NullableIntFieldUpdateOperationsInput | number | null
     absensi?: AbsensiUncheckedUpdateManyWithoutRfidNestedInput
   }
@@ -13681,6 +13903,36 @@ export namespace Prisma {
     muridId?: IntFilter<"WaliMurid"> | number
   }
 
+  export type AbsensiUpsertWithWhereUniqueWithoutMuridInput = {
+    where: AbsensiWhereUniqueInput
+    update: XOR<AbsensiUpdateWithoutMuridInput, AbsensiUncheckedUpdateWithoutMuridInput>
+    create: XOR<AbsensiCreateWithoutMuridInput, AbsensiUncheckedCreateWithoutMuridInput>
+  }
+
+  export type AbsensiUpdateWithWhereUniqueWithoutMuridInput = {
+    where: AbsensiWhereUniqueInput
+    data: XOR<AbsensiUpdateWithoutMuridInput, AbsensiUncheckedUpdateWithoutMuridInput>
+  }
+
+  export type AbsensiUpdateManyWithWhereWithoutMuridInput = {
+    where: AbsensiScalarWhereInput
+    data: XOR<AbsensiUpdateManyMutationInput, AbsensiUncheckedUpdateManyWithoutMuridInput>
+  }
+
+  export type AbsensiScalarWhereInput = {
+    AND?: AbsensiScalarWhereInput | AbsensiScalarWhereInput[]
+    OR?: AbsensiScalarWhereInput[]
+    NOT?: AbsensiScalarWhereInput | AbsensiScalarWhereInput[]
+    id?: IntFilter<"Absensi"> | number
+    rfidNumb?: StringNullableFilter<"Absensi"> | string | null
+    muridId?: IntNullableFilter<"Absensi"> | number | null
+    keterangan?: EnumKeteranganFilter<"Absensi"> | $Enums.Keterangan
+    tanggal?: DateTimeNullableFilter<"Absensi"> | Date | string | null
+    jamHadir?: DateTimeNullableFilter<"Absensi"> | Date | string | null
+    jamPulang?: DateTimeNullableFilter<"Absensi"> | Date | string | null
+    catatan?: StringNullableFilter<"Absensi"> | string | null
+  }
+
   export type MuridProfileCreateWithoutWaliMuridsInput = {
     nis: number
     name: string
@@ -13688,6 +13940,7 @@ export namespace Prisma {
     kelas?: KelasCreateNestedOneWithoutMuridProfileInput
     rfid?: RfidCreateNestedOneWithoutMuridProfileInput
     User?: UserCreateNestedOneWithoutMuridProfileInput
+    absensi?: AbsensiCreateNestedManyWithoutMuridInput
   }
 
   export type MuridProfileUncheckedCreateWithoutWaliMuridsInput = {
@@ -13698,6 +13951,7 @@ export namespace Prisma {
     kelasId?: number | null
     rfid?: RfidUncheckedCreateNestedOneWithoutMuridProfileInput
     User?: UserUncheckedCreateNestedOneWithoutMuridProfileInput
+    absensi?: AbsensiUncheckedCreateNestedManyWithoutMuridInput
   }
 
   export type MuridProfileCreateOrConnectWithoutWaliMuridsInput = {
@@ -13723,6 +13977,7 @@ export namespace Prisma {
     kelas?: KelasUpdateOneWithoutMuridProfileNestedInput
     rfid?: RfidUpdateOneWithoutMuridProfileNestedInput
     User?: UserUpdateOneWithoutMuridProfileNestedInput
+    absensi?: AbsensiUpdateManyWithoutMuridNestedInput
   }
 
   export type MuridProfileUncheckedUpdateWithoutWaliMuridsInput = {
@@ -13733,17 +13988,18 @@ export namespace Prisma {
     kelasId?: NullableIntFieldUpdateOperationsInput | number | null
     rfid?: RfidUncheckedUpdateOneWithoutMuridProfileNestedInput
     User?: UserUncheckedUpdateOneWithoutMuridProfileNestedInput
+    absensi?: AbsensiUncheckedUpdateManyWithoutMuridNestedInput
   }
 
   export type RfidCreateWithoutGuruProfileInput = {
-    rfidNumb: string
+    rfidNumb?: string | null
     muridProfile?: MuridProfileCreateNestedOneWithoutRfidInput
     absensi?: AbsensiCreateNestedManyWithoutRfidInput
   }
 
   export type RfidUncheckedCreateWithoutGuruProfileInput = {
     id?: number
-    rfidNumb: string
+    rfidNumb?: string | null
     muridProfileId?: number | null
     absensi?: AbsensiUncheckedCreateNestedManyWithoutRfidInput
   }
@@ -13832,14 +14088,14 @@ export namespace Prisma {
   }
 
   export type RfidUpdateWithoutGuruProfileInput = {
-    rfidNumb?: StringFieldUpdateOperationsInput | string
+    rfidNumb?: NullableStringFieldUpdateOperationsInput | string | null
     muridProfile?: MuridProfileUpdateOneWithoutRfidNestedInput
     absensi?: AbsensiUpdateManyWithoutRfidNestedInput
   }
 
   export type RfidUncheckedUpdateWithoutGuruProfileInput = {
     id?: IntFieldUpdateOperationsInput | number
-    rfidNumb?: StringFieldUpdateOperationsInput | string
+    rfidNumb?: NullableStringFieldUpdateOperationsInput | string | null
     muridProfileId?: NullableIntFieldUpdateOperationsInput | number | null
     absensi?: AbsensiUncheckedUpdateManyWithoutRfidNestedInput
   }
@@ -13955,6 +14211,7 @@ export namespace Prisma {
     rfid?: RfidCreateNestedOneWithoutMuridProfileInput
     User?: UserCreateNestedOneWithoutMuridProfileInput
     waliMurids?: WaliMuridCreateNestedManyWithoutMuridInput
+    absensi?: AbsensiCreateNestedManyWithoutMuridInput
   }
 
   export type MuridProfileUncheckedCreateWithoutKelasInput = {
@@ -13965,6 +14222,7 @@ export namespace Prisma {
     rfid?: RfidUncheckedCreateNestedOneWithoutMuridProfileInput
     User?: UserUncheckedCreateNestedOneWithoutMuridProfileInput
     waliMurids?: WaliMuridUncheckedCreateNestedManyWithoutMuridInput
+    absensi?: AbsensiUncheckedCreateNestedManyWithoutMuridInput
   }
 
   export type MuridProfileCreateOrConnectWithoutKelasInput = {
@@ -14080,14 +14338,14 @@ export namespace Prisma {
   }
 
   export type RfidCreateWithoutAbsensiInput = {
-    rfidNumb: string
+    rfidNumb?: string | null
     muridProfile?: MuridProfileCreateNestedOneWithoutRfidInput
     guruProfile?: GuruProfileCreateNestedOneWithoutRfidInput
   }
 
   export type RfidUncheckedCreateWithoutAbsensiInput = {
     id?: number
-    rfidNumb: string
+    rfidNumb?: string | null
     muridProfileId?: number | null
     guruProfileId?: number | null
   }
@@ -14095,6 +14353,32 @@ export namespace Prisma {
   export type RfidCreateOrConnectWithoutAbsensiInput = {
     where: RfidWhereUniqueInput
     create: XOR<RfidCreateWithoutAbsensiInput, RfidUncheckedCreateWithoutAbsensiInput>
+  }
+
+  export type MuridProfileCreateWithoutAbsensiInput = {
+    nis: number
+    name: string
+    noMurid?: string | null
+    kelas?: KelasCreateNestedOneWithoutMuridProfileInput
+    rfid?: RfidCreateNestedOneWithoutMuridProfileInput
+    User?: UserCreateNestedOneWithoutMuridProfileInput
+    waliMurids?: WaliMuridCreateNestedManyWithoutMuridInput
+  }
+
+  export type MuridProfileUncheckedCreateWithoutAbsensiInput = {
+    id?: number
+    nis: number
+    name: string
+    noMurid?: string | null
+    kelasId?: number | null
+    rfid?: RfidUncheckedCreateNestedOneWithoutMuridProfileInput
+    User?: UserUncheckedCreateNestedOneWithoutMuridProfileInput
+    waliMurids?: WaliMuridUncheckedCreateNestedManyWithoutMuridInput
+  }
+
+  export type MuridProfileCreateOrConnectWithoutAbsensiInput = {
+    where: MuridProfileWhereUniqueInput
+    create: XOR<MuridProfileCreateWithoutAbsensiInput, MuridProfileUncheckedCreateWithoutAbsensiInput>
   }
 
   export type RfidUpsertWithoutAbsensiInput = {
@@ -14109,16 +14393,48 @@ export namespace Prisma {
   }
 
   export type RfidUpdateWithoutAbsensiInput = {
-    rfidNumb?: StringFieldUpdateOperationsInput | string
+    rfidNumb?: NullableStringFieldUpdateOperationsInput | string | null
     muridProfile?: MuridProfileUpdateOneWithoutRfidNestedInput
     guruProfile?: GuruProfileUpdateOneWithoutRfidNestedInput
   }
 
   export type RfidUncheckedUpdateWithoutAbsensiInput = {
     id?: IntFieldUpdateOperationsInput | number
-    rfidNumb?: StringFieldUpdateOperationsInput | string
+    rfidNumb?: NullableStringFieldUpdateOperationsInput | string | null
     muridProfileId?: NullableIntFieldUpdateOperationsInput | number | null
     guruProfileId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type MuridProfileUpsertWithoutAbsensiInput = {
+    update: XOR<MuridProfileUpdateWithoutAbsensiInput, MuridProfileUncheckedUpdateWithoutAbsensiInput>
+    create: XOR<MuridProfileCreateWithoutAbsensiInput, MuridProfileUncheckedCreateWithoutAbsensiInput>
+    where?: MuridProfileWhereInput
+  }
+
+  export type MuridProfileUpdateToOneWithWhereWithoutAbsensiInput = {
+    where?: MuridProfileWhereInput
+    data: XOR<MuridProfileUpdateWithoutAbsensiInput, MuridProfileUncheckedUpdateWithoutAbsensiInput>
+  }
+
+  export type MuridProfileUpdateWithoutAbsensiInput = {
+    nis?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    noMurid?: NullableStringFieldUpdateOperationsInput | string | null
+    kelas?: KelasUpdateOneWithoutMuridProfileNestedInput
+    rfid?: RfidUpdateOneWithoutMuridProfileNestedInput
+    User?: UserUpdateOneWithoutMuridProfileNestedInput
+    waliMurids?: WaliMuridUpdateManyWithoutMuridNestedInput
+  }
+
+  export type MuridProfileUncheckedUpdateWithoutAbsensiInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    nis?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    noMurid?: NullableStringFieldUpdateOperationsInput | string | null
+    kelasId?: NullableIntFieldUpdateOperationsInput | number | null
+    rfid?: RfidUncheckedUpdateOneWithoutMuridProfileNestedInput
+    User?: UserUncheckedUpdateOneWithoutMuridProfileNestedInput
+    waliMurids?: WaliMuridUncheckedUpdateManyWithoutMuridNestedInput
   }
 
   export type GuruProfileCreateWithoutJadwalTugasInput = {
@@ -14224,6 +14540,7 @@ export namespace Prisma {
     kelas?: KelasCreateNestedOneWithoutMuridProfileInput
     User?: UserCreateNestedOneWithoutMuridProfileInput
     waliMurids?: WaliMuridCreateNestedManyWithoutMuridInput
+    absensi?: AbsensiCreateNestedManyWithoutMuridInput
   }
 
   export type MuridProfileUncheckedCreateWithoutRfidInput = {
@@ -14234,6 +14551,7 @@ export namespace Prisma {
     kelasId?: number | null
     User?: UserUncheckedCreateNestedOneWithoutMuridProfileInput
     waliMurids?: WaliMuridUncheckedCreateNestedManyWithoutMuridInput
+    absensi?: AbsensiUncheckedCreateNestedManyWithoutMuridInput
   }
 
   export type MuridProfileCreateOrConnectWithoutRfidInput = {
@@ -14271,10 +14589,12 @@ export namespace Prisma {
     jamHadir?: Date | string | null
     jamPulang?: Date | string | null
     catatan?: string | null
+    murid?: MuridProfileCreateNestedOneWithoutAbsensiInput
   }
 
   export type AbsensiUncheckedCreateWithoutRfidInput = {
     id?: number
+    muridId?: number | null
     keterangan: $Enums.Keterangan
     tanggal?: Date | string | null
     jamHadir?: Date | string | null
@@ -14310,6 +14630,7 @@ export namespace Prisma {
     kelas?: KelasUpdateOneWithoutMuridProfileNestedInput
     User?: UserUpdateOneWithoutMuridProfileNestedInput
     waliMurids?: WaliMuridUpdateManyWithoutMuridNestedInput
+    absensi?: AbsensiUpdateManyWithoutMuridNestedInput
   }
 
   export type MuridProfileUncheckedUpdateWithoutRfidInput = {
@@ -14320,6 +14641,7 @@ export namespace Prisma {
     kelasId?: NullableIntFieldUpdateOperationsInput | number | null
     User?: UserUncheckedUpdateOneWithoutMuridProfileNestedInput
     waliMurids?: WaliMuridUncheckedUpdateManyWithoutMuridNestedInput
+    absensi?: AbsensiUncheckedUpdateManyWithoutMuridNestedInput
   }
 
   export type GuruProfileUpsertWithoutRfidInput = {
@@ -14368,23 +14690,20 @@ export namespace Prisma {
     data: XOR<AbsensiUpdateManyMutationInput, AbsensiUncheckedUpdateManyWithoutRfidInput>
   }
 
-  export type AbsensiScalarWhereInput = {
-    AND?: AbsensiScalarWhereInput | AbsensiScalarWhereInput[]
-    OR?: AbsensiScalarWhereInput[]
-    NOT?: AbsensiScalarWhereInput | AbsensiScalarWhereInput[]
-    id?: IntFilter<"Absensi"> | number
-    rfidNumb?: StringFilter<"Absensi"> | string
-    keterangan?: EnumKeteranganFilter<"Absensi"> | $Enums.Keterangan
-    tanggal?: DateTimeNullableFilter<"Absensi"> | Date | string | null
-    jamHadir?: DateTimeNullableFilter<"Absensi"> | Date | string | null
-    jamPulang?: DateTimeNullableFilter<"Absensi"> | Date | string | null
-    catatan?: StringNullableFilter<"Absensi"> | string | null
-  }
-
   export type WaliMuridCreateManyMuridInput = {
     id?: number
     nameWaliMurid: string
     noWaliMurid: string
+  }
+
+  export type AbsensiCreateManyMuridInput = {
+    id?: number
+    rfidNumb?: string | null
+    keterangan: $Enums.Keterangan
+    tanggal?: Date | string | null
+    jamHadir?: Date | string | null
+    jamPulang?: Date | string | null
+    catatan?: string | null
   }
 
   export type WaliMuridUpdateWithoutMuridInput = {
@@ -14402,6 +14721,35 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     nameWaliMurid?: StringFieldUpdateOperationsInput | string
     noWaliMurid?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type AbsensiUpdateWithoutMuridInput = {
+    keterangan?: EnumKeteranganFieldUpdateOperationsInput | $Enums.Keterangan
+    tanggal?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    jamHadir?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    jamPulang?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    catatan?: NullableStringFieldUpdateOperationsInput | string | null
+    rfid?: RfidUpdateOneWithoutAbsensiNestedInput
+  }
+
+  export type AbsensiUncheckedUpdateWithoutMuridInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    rfidNumb?: NullableStringFieldUpdateOperationsInput | string | null
+    keterangan?: EnumKeteranganFieldUpdateOperationsInput | $Enums.Keterangan
+    tanggal?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    jamHadir?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    jamPulang?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    catatan?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type AbsensiUncheckedUpdateManyWithoutMuridInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    rfidNumb?: NullableStringFieldUpdateOperationsInput | string | null
+    keterangan?: EnumKeteranganFieldUpdateOperationsInput | $Enums.Keterangan
+    tanggal?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    jamHadir?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    jamPulang?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    catatan?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type JadwalTugasCreateManyGuruInput = {
@@ -14467,6 +14815,7 @@ export namespace Prisma {
     rfid?: RfidUpdateOneWithoutMuridProfileNestedInput
     User?: UserUpdateOneWithoutMuridProfileNestedInput
     waliMurids?: WaliMuridUpdateManyWithoutMuridNestedInput
+    absensi?: AbsensiUpdateManyWithoutMuridNestedInput
   }
 
   export type MuridProfileUncheckedUpdateWithoutKelasInput = {
@@ -14477,6 +14826,7 @@ export namespace Prisma {
     rfid?: RfidUncheckedUpdateOneWithoutMuridProfileNestedInput
     User?: UserUncheckedUpdateOneWithoutMuridProfileNestedInput
     waliMurids?: WaliMuridUncheckedUpdateManyWithoutMuridNestedInput
+    absensi?: AbsensiUncheckedUpdateManyWithoutMuridNestedInput
   }
 
   export type MuridProfileUncheckedUpdateManyWithoutKelasInput = {
@@ -14517,6 +14867,7 @@ export namespace Prisma {
 
   export type AbsensiCreateManyRfidInput = {
     id?: number
+    muridId?: number | null
     keterangan: $Enums.Keterangan
     tanggal?: Date | string | null
     jamHadir?: Date | string | null
@@ -14530,10 +14881,12 @@ export namespace Prisma {
     jamHadir?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     jamPulang?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     catatan?: NullableStringFieldUpdateOperationsInput | string | null
+    murid?: MuridProfileUpdateOneWithoutAbsensiNestedInput
   }
 
   export type AbsensiUncheckedUpdateWithoutRfidInput = {
     id?: IntFieldUpdateOperationsInput | number
+    muridId?: NullableIntFieldUpdateOperationsInput | number | null
     keterangan?: EnumKeteranganFieldUpdateOperationsInput | $Enums.Keterangan
     tanggal?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     jamHadir?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -14543,6 +14896,7 @@ export namespace Prisma {
 
   export type AbsensiUncheckedUpdateManyWithoutRfidInput = {
     id?: IntFieldUpdateOperationsInput | number
+    muridId?: NullableIntFieldUpdateOperationsInput | number | null
     keterangan?: EnumKeteranganFieldUpdateOperationsInput | $Enums.Keterangan
     tanggal?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     jamHadir?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

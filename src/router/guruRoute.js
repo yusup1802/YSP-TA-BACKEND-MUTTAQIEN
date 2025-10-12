@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { tambahJadwal, profileGuru , inputKeteranganKehadiranMurid} from "../controller/guruController.js";
+import { tambahJadwal, profileGuru , inputKehadiranFullCalender ,inputKehadiranToday} from "../controller/guruController.js";
 import { authenticateAccessToken } from "../middleware/authMiddleware.js";
 import { checkRole } from "../middleware/roleMiddleware.js";
 import { validation } from "#middleware/validation.js";
@@ -20,7 +20,11 @@ router.post("/guru/jadwal",authenticateAccessToken,
 router.post(
   "/guru/absensi",
   validation(inputKeteranganKehadiranSchema),
-  inputKeteranganKehadiranMurid
+  inputKehadiranFullCalender
+);
+router.post(
+  "/guru/absensi/murid-profile",
+  inputKehadiranToday
 );
 
 export default router;

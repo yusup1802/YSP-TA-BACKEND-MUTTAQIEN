@@ -1,8 +1,7 @@
-import { prisma } from "#configPath"; // ganti sesuai path aslimu
+import { prisma } from "#configPath";
 
+let AksesRfidReader = "ACCESS_DENIED";
 let lastRfidData = null;
-let bukaAkses = true;
-
 export const checkRfidGuru = async (req, res) => {
   try {
     const { rfid } = req.body;
@@ -45,11 +44,14 @@ export const tambahRfid = async (req, res) => {
     res.status(500).json({ message: "server error" });
   }
 };
+
 export const getRfidReader = async (req, res) => {
-  res.send(bukaAkses ? "1" : "0");
+  res.send(AksesRfidReader);
 };
+
 export const putRfidReader = async (req, res) => {
-  bukaAkses = !bukaAkses;
-  console.log("Akses RFID:", bukaAkses);
-  res.send(bukaAkses ? "1" : "0");
+  const { bukaAkses } = req.body;
+  const allowed = ["FREE_ACCESS", "TEACHER_VERIFY", "ACCESS_DENIED"];
+  AksesRfidReader = allowed.includes(bukaAkses) ? bukaAkses : "ACCESS_DENIED";
+  res.send(AksesRfidReader);
 };
