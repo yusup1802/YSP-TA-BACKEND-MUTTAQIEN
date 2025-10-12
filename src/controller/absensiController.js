@@ -242,17 +242,12 @@ const kirimNotifikasiWhatsapp = async ({
 };
 
 export const daftarKehadiranHariIni = async (req, res) => {
-  //  console.log('User data:', JSON.stringify(req.user, null, 2));
-  // console.log('Guru Profile:', req.user.guruProfile);
-  // console.log('Kelas ID:', req.user.guruProfile?.Kelas?.id);
-  // console.log('Guru ID:', req.user.guruProfile?.id);
-
   const kelasId = req.user.guruProfile?.Kelas?.id;
   const guruId = req.user.guruProfile?.id;
 
-    if (!kelasId || !guruId) {
+  if (!kelasId || !guruId) {
     return res.status(400).json({
-      message: "Guru belum memiliki kelas",
+      message: "Belum menjadi Wali kelas",
     });
   }
   try {
@@ -298,6 +293,9 @@ export const daftarKehadiranHariIni = async (req, res) => {
             id: true,
             name: true,
             rfid: { select: { rfidNumb: true } },
+          },
+          orderBy: {
+            id: "asc",
           },
         },
       },
@@ -449,7 +447,7 @@ export const downloadHistoryAbsensi = async (req, res) => {
           OR: [{ muridId: murid.id }, { rfidNumb: rfidNumb }],
         },
         orderBy: {
-          tanggal: "desc", 
+          tanggal: "desc",
         },
       });
 

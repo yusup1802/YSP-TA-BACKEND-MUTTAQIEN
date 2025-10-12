@@ -31,6 +31,9 @@ export const getAllMuridByWaliKelas = async (req, res) => {
             noMurid: true,
             rfid: true,
           },
+          orderBy:{
+            id: 'asc'
+          }
         },
       },
     });
